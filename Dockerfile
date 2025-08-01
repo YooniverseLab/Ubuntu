@@ -1,13 +1,12 @@
-# 베이스 이미지 설정  
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
-# 환경설정  
-ENV DEBIAN_FRONTEND=noninteractive
-
-# 필요한 패키지 설치  
+# 필수 업데이트 및 tmate 설치  
 RUN apt-get update && \
-    apt-get install -y tmate wget curl && \
-    apt-get clean
+    apt-get install -y tmate && \
+    rm -rf /var/lib/apt/lists/*
 
-# Tmate 실행 스크립트  
-CMD ["tmate"]
+# 필요하면 포트 열기 (터미널 세션 공유용)
+EXPOSE 2222
+
+# 컨테이너 시작 시 tmate 세션 열기와 앱 실행  
+CMD sh -c "tmate -F -S /tmp/tmate.sock & your_app_command"
